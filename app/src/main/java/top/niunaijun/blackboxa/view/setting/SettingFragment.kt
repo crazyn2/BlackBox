@@ -2,6 +2,7 @@ package top.niunaijun.blackboxa.view.setting
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
@@ -26,7 +27,6 @@ class SettingFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.setting, rootKey)
-
         xpEnable = findPreference("xp_enable")!!
         xpEnable.isChecked = BlackBoxCore.get().isXPEnable
 
@@ -36,7 +36,7 @@ class SettingFragment : PreferenceFragmentCompat() {
                 BlackBoxCore.get().isXPEnable = false
                 xpEnable.isChecked = false
             } else {
-                BlackBoxCore.get().isXPEnable = equals(newValue)
+                BlackBoxCore.get().isXPEnable = newValue as Boolean
             }
             true
         }

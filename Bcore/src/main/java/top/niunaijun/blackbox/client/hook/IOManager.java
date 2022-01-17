@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Debug;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.File;
 import java.util.HashMap;
@@ -34,6 +35,7 @@ import top.niunaijun.blackbox.utils.compat.BuildCompat;
  */
 @SuppressLint("SdCardPath")
 public class IOManager {
+    public static final String TAG = "IOManager";
     private static IOManager sIOManager = new IOManager();
     private Map<String, String> mRedirectMap = new LinkedHashMap<>();
 
@@ -53,6 +55,7 @@ public class IOManager {
             redirectFile.mkdirs();
         }
         VMCore.addIORule(origPath, redirectPath);
+//        Log.d(TAG+".addRedirect", "origPath: "+origPath+", redirectPath: "+redirectPath);
     }
 
     public String redirectPath(String path) {
@@ -92,8 +95,7 @@ public class IOManager {
         String pathStr = path.getAbsolutePath();
         return new File(redirectPath(pathStr, rule));
     }
-
-    // 由于正常情况Application已完成重定向，以下重定向是怕代码写死。
+    //由于正常情况Application已完成重定向，以下重定向是怕代码写死。
     public void enableRedirect(Context context) {
         Map<String, String> rule = new LinkedHashMap<>();
         String packageName = context.getPackageName();

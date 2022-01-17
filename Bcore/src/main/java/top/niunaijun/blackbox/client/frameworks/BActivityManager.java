@@ -190,7 +190,9 @@ public class BActivityManager {
             e.printStackTrace();
         }
     }
-
+    /*
+    * 获取活动管理服务
+    * */
     private IBActivityManagerService getService() {
         if (mService != null && mService.asBinder().isBinderAlive()) {
             return mService;

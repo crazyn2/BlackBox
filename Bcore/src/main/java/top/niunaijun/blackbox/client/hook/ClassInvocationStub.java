@@ -14,6 +14,7 @@ import top.niunaijun.blackbox.utils.Slog;
 
 /**
  * Created by Milk on 3/30/21.
+ * ancestor of all android class hooked
  * * ∧＿∧
  * (`･ω･∥
  * 丶　つ０
@@ -49,17 +50,27 @@ public abstract class ClassInvocationStub implements InvocationHandler, IInjectH
 
         onBindMethod();
     }
-
+    /*
+    * 添加Hook方法到Hook哈希记录表
+    * */
     protected void addMethodHook(MethodHook methodHook) {
         mMethodHookMap.put(methodHook.getMethodName(), methodHook);
     }
-
+    /*
+    * 调用Hook方法
+    * */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        /*
+        * 检查哈系表中是否需要Hook的对应方法
+        * */
         MethodHook methodHook = mMethodHookMap.get(method.getName());
         if (methodHook == null || !method.getName().equals(methodHook.getMethodName())) {
             try {
                 log(method, args, null, "beforeHook");
+                /*
+                * 执行Hook前的原方法
+                * */
                 Object invoke = method.invoke(mBase, args);
                 log(method, args, invoke, "afterHook");
                 return invoke;
@@ -78,26 +89,28 @@ public abstract class ClassInvocationStub implements InvocationHandler, IInjectH
         log(method, args, result, "afterHook");
         return result;
     }
-
+    /*
+    * Hook打印日志
+    * */
     private void log(Method method, Object[] args, Object result, String event) {
-//        String argStr;
-//        // Arguments to string is done before the method is called because the method might actually change it
-//        try {
-//            argStr = Arrays.toString(args);
-//            argStr = argStr.substring(1, argStr.length() - 1);
-//        } catch (Throwable e) {
-//            argStr = "" + e.getMessage();
-//        }
-//
-//        String retString;
-//        if (method.getReturnType().equals(void.class)) {
-//            retString = "void";
-//        } else {
-//            retString = String.valueOf(result);
-//        }
-//        if (enableLog()) {
-//            Slog.d(TAG, event + "  " + method.getDeclaringClass().getSimpleName() + "." + method.getName() + "(" + argStr + ") => " + retString);
-//        }
+        String argStr;
+        // Arguments to string is done before the method is called because the method might actually change it
+        try {
+            argStr = Arrays.toString(args);
+            argStr = argStr.substring(1, argStr.length() - 1);
+        } catch (Throwable e) {
+            argStr = "" + e.getMessage();
+        }
+
+        String retString;
+        if (method.getReturnType().equals(void.class)) {
+            retString = "void";
+        } else {
+            retString = String.valueOf(result);
+        }
+        if (enableLog()) {
+            Slog.d(TAG, event + "  " + method.getDeclaringClass().getSimpleName() + "." + method.getName() + "(" + argStr + ") => " + retString);
+        }
     }
 
     protected boolean enableLog() {

@@ -4,7 +4,8 @@ import java.lang.reflect.Method;
 
 /**
  * Created by Milk on 3/30/21.
- * * ∧＿∧
+ * abstract class define the standard of MethodHook
+ *  * * ∧＿∧
  * (`･ω･∥
  * 丶　つ０
  * しーＪ

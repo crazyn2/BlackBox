@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.os.Process;
+import android.util.Log;
 
 import top.niunaijun.blackbox.client.ClientConfiguration;
 import top.niunaijun.blackbox.client.StubManifest;
@@ -51,6 +52,8 @@ import top.niunaijun.blackbox.client.hook.delegate.ContentProviderDelegate;
 import top.niunaijun.blackbox.server.ServiceManager;
 
 import static top.niunaijun.blackbox.BEnvironment.JUNIT_JAR;
+
+import androidx.annotation.RequiresApi;
 
 /**
  * Created by Milk on 3/30/21.
@@ -115,7 +118,8 @@ public class BlackBoxCore extends ClientConfiguration {
         }
         if (BlackBoxCore.get().isVirtualProcess()) {
             if (processName.endsWith("p0")) {
-//                android.os.Debug.waitForDebugger();
+//                Log.d(TAG, "p0");
+                android.os.Debug.waitForDebugger();
             }
 //            android.os.Debug.waitForDebugger();
         }
@@ -171,12 +175,15 @@ public class BlackBoxCore extends ClientConfiguration {
     public static BStorageManager getBStorageManager() {
         return BStorageManager.get();
     }
-
+    /*
+    * 启动内部应用
+    * */
     public boolean launchApk(String packageName, int userId) {
         Intent launchIntentForPackage = getBPackageManager().getLaunchIntentForPackage(packageName, userId);
         if (launchIntentForPackage == null) {
             return false;
         }
+        Log.d(TAG+ ".launchApk", packageName);
         startActivity(launchIntentForPackage, userId);
         return true;
     }

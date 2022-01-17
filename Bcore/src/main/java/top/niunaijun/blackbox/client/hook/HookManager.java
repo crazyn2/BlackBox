@@ -52,7 +52,7 @@ public class HookManager {
     public static HookManager get() {
         return sHookManager;
     }
-
+    // 重点关注下
     public void init() {
         if (BlackBoxCore.get().isVirtualProcess()) {
             addInjector(new DisplayManagerStub());
@@ -120,7 +120,7 @@ public class HookManager {
             iInjectHook.injectHook();
         }
     }
-
+    // add injectors into hash map.
     void addInjector(IInjectHook injectHook) {
         mInjectors.put(injectHook.getClass(), injectHook);
     }

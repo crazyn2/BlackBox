@@ -92,7 +92,7 @@ public abstract class ClassInvocationStub implements InvocationHandler, IInjectH
     /*
     * Hook打印日志
     * */
-    private void log(Method method, Object[] args, Object result, String event) {
+    protected void log(Method method, Object[] args, Object result, String event) {
         String argStr;
         // Arguments to string is done before the method is called because the method might actually change it
         try {

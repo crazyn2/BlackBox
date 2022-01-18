@@ -118,8 +118,8 @@ public class BlackBoxCore extends ClientConfiguration {
         }
         if (BlackBoxCore.get().isVirtualProcess()) {
             if (processName.endsWith("p0")) {
+//                android.os.Debug.waitForDebugger();
 //                Log.d(TAG, "p0");
-                android.os.Debug.waitForDebugger();
             }
 //            android.os.Debug.waitForDebugger();
         }

@@ -13,6 +13,7 @@ import android.util.Log;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.Arrays;
 import java.util.List;
 
 import mirror.android.app.ActivityManagerNative;
@@ -34,6 +35,7 @@ import top.niunaijun.blackbox.client.stub.StubActivity;
 import top.niunaijun.blackbox.utils.ComponentUtils;
 import top.niunaijun.blackbox.utils.MethodParameterUtils;
 import top.niunaijun.blackbox.utils.Reflector;
+import top.niunaijun.blackbox.utils.Slog;
 import top.niunaijun.blackbox.utils.compat.BuildCompat;
 
 import static android.content.pm.PackageManager.GET_META_DATA;
@@ -108,8 +110,29 @@ public class ActivityManagerStub extends ClassInvocationStub {
             return "getContentProvider";
         }
 
+        protected void log(Method method, Object[] args) {
+            String argStr;
+            // Arguments to string is done before the method is called because the method might actually change it
+            try {
+                argStr = Arrays.toString(args);
+                argStr = argStr.substring(1, argStr.length() - 1);
+            } catch (Throwable e) {
+                argStr = "" + e.getMessage();
+            }
+
+            String retString;
+            if (method.getReturnType().equals(void.class)) {
+                retString = "void";
+            } else {
+                retString = method.getReturnType().toString();
+            }
+            Slog.d(TAG, method.getDeclaringClass().getSimpleName() + "." + method.getName() + "(" + argStr + ") => " + retString);
+
+        }
         @Override
         protected Object hook(Object who, Method method, Object[] args) throws Exception {
+            log(method, args);
+//            android.os.Debug.waitForDebugger();
             int authIndex = getAuthIndex();
             Object auth = args[authIndex];
             Object content = null;
